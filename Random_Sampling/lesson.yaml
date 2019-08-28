@@ -128,6 +128,6 @@
 - Class: cmd_question
   Output: Now trying running sample(directions, 40, prob = p) to get the directions for our trip.  
   CorrectAnswer: sample(directions, 40, prob = p)
-  AnswerTests: omnitest(correctExpr='sample(directions, 40, prob = p)')
-  Hint: Try typing sample(directions, 40, prob = p).  
+  AnswerTests: omnitest(correctExpr='sample(directions, 40, replace = T, prob = p)')
+  Hint: Try typing sample(directions, 40, replace = T, prob = p).  
   
