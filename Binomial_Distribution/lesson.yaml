@@ -1,0 +1,262 @@
+- Class: meta
+  Course: Stat511
+  Lesson: Binomial_Distribution
+  Author: your name goes here
+  Type: Standard
+  Organization: your organization's name goes here
+  Version: 2.4.4
+
+# WHAT IS A BERNOULLI DISTRIBUTION
+- Class: text
+  Output: In this lesson, we will go through the basics of the binomial distribution and how to work with it in R.
+
+  
+- Class: text
+  Output: We will begin with the Bernoulli distribution, a special case of the Binomial distribution. The Bernoulli distribution tells us about the frequency of being successful on a trial that has an option for either failure or success. 
+  
+- Class: text
+  Output: You can consider the Bernoulli distribution as a model of success and failure. As we discussed in class, mathematical models (like the Bernoulli distribution) have parameters which produce specific instances of a model. 
+
+# BERNOULLI PARAMETER
+- Class: cmd_question
+  Output: The Bernoulli distribution has a single parameter p denoting the probability of success. The probability of failure can then be directly computed as 1 - p. What is the probability of failure for a Bernoulli distribution with p = 0.15?
+  CorrectAnswer: 0.85
+  AnswerTests: omnitest(correctVal = 0.85)
+  Hint: What is 1 - 0.15? 
+ 
+- Class: text
+  Output: We have already demonstrated how you can take a random sample using the sample function. This function can be used to conduct a simulation of a Bernoulli random variable. 
+
+# outcomes <- c('Hit', 'Miss')
+- Class: cmd_question
+  Output: Lets consider an example of shooting free throws where your accuracy at hitting the shot is 0.6. First create a vector of possible outcomes that includes 'Hit' and 'Miss' in this order. Store the result in a vector called outcomes.
+  CorrectAnswer: outcomes <- c('Hit', 'Miss')
+  AnswerTests: omnitest(correctExpr = "outcomes <- c('Hit', 'Miss')")
+  Hint: Set outcomes to c("Hit", "Miss").   
+
+- Class: cmd_question
+  Output: Now create a probability vector named p that contains the probability of a "Hit" (0.6) and the probability of a "Miss" (0.4).
+  CorrectAnswer: p <- c(0.6, 0.4)
+  AnswerTests: omnitest(correctExpr = 'p <- c(0.6, 0.4)')
+  Hint: Make sure that you have the numbers 0.6 and 0.4 in the correct order and you are creating the variable p.
+
+# SIMULATE 16 TRIALS
+- Class: cmd_question
+  Output: Now sample 16 results from your outcomes vector using p to specify the probabilities. Save the results in a vector called shots. Make sure that you put the arguments in the correct order as you see them in ?sample. Additionally, optional arguments (like replace) should be named. Manditory arguments like x and size should not be named. 
+  CorrectAnswer: shots <- sample(outcomes, 16, replace = T, prob = p) 
+  AnswerTests: omnitest(correctExpr = 'shots <- sample(outcomes, 16, replace = T, prob = p)')
+  Hint: Pass 4 arguments to sample - outcomes, 16, replace = T and prob = p. Make sure you are storing the result in a vector called shots.
+
+- Class: cmd_question
+  Output: Type shots to take a look at your shot performance.
+  CorrectAnswer: shots
+  AnswerTests: omnitest(correctExpr = 'shots')
+  Hint: Type shots.
+  
+- Class: text
+  Output: Now you can see your simulated shot performance, and you didn't even have to pick a ball!
+
+# CONVERT TO NUMERIC
+- Class: cmd_question
+  Output: We can visualize your shot performance by constructing a histogram. A histogram allows us to take a look at the frequency of each outcome (or ranges of outcomes) for a random variable that we have observed multiple times. In order to construct a histogram using the hist function it is first necessary to convert your outcomes to a vector of zeros and ones. We can use boolean logic to do this. Try typing shots_bool <- shots == 'Hit'. 
+  CorrectAnswer: shots_bool <- shots == 'Hit'
+  AnswerTests: omnitest(correctExpr='shots_bool <- shots == "Hit"')
+  
+- Class: cmd_question
+  Output: You have just created a boolean vector that is TRUE for shots that you hit and FALSE for shots that you missed. Take a look by typing shots_bool.
+  CorrectAnswer: shots_bool
+  AnswerTests: omnitest(correctExpr='shots_bool')
+  Hint: Try typing shots_bool.
+  
+- Class: cmd_question
+  Output: You can convert shots_bool to a numeric vector by using the as.numeric function and passing shots_bool as the only argument. Try this and store the result in a variable called shots_numeric.
+  CorrectAnswer: shots_numeric <- as.numeric(shots_bool)
+  AnswerTests: omnitest(correctExpr='shots_numeric <- as.numeric(shots_bool)')
+  Hint: Try storing as.numeric(shots_bool) in a variable called shots_numeric.  
+
+  # CONSTRUCT HISTOGRAM
+- Class: cmd_question
+  Output: Now we can construct a histogram using the hist function, specifically typing hist(shots_numeric). Try this now.   
+  CorrectAnswer: hist(shots_numeric)
+  AnswerTests: omnitest(correctExpr='hist(shots_numeric)')
+  Hint: Try typing hist(shots_numeric).
+
+- Class: text
+  Output: The histogram divides the x range of the vector (which ranges from 0 to 1) into bins and plots the frequency for each bin. As there are only values at 0 and 1, we are only going to see counts in the bins covering either 0 or 1. 
+
+# PROPORTION SHOTS MADE  
+- Class: text
+  Output: We can summarize our shot percentage by taking the proportion of successful shots in our sample. This can be computed by taking the total number of successes over the total number of shots.  
+
+- Class: cmd_question
+  Output: First lets compute the total number of successes. You can use the sum function to count the total number of successes in the vector shots_numeric. Try typing sum(shots_numeric) and store the results in total_made.
+  CorrectAnswer: total_made <- sum(shots_numeric)
+  AnswerTests: omnitest(correctExpr='total_made <- sum(shots_numeric)')
+  Hint: Try storing sum(shots_numeric) in a variable called total_made.
+  
+- Class: cmd_question
+  Output: Type total_made to see how many shots you made. 
+  CorrectAnswer: total_made
+  AnswerTests: omnitest(correctExpr='total_made')
+  Hint: Type total_made.
+
+- Class: cmd_question
+  Output: Now divide total_made by 16, the total number of shots taken to get the sample proportion, or proportion of shots that you made in the sample. Store the result in a variable called sample_proportion.   
+  CorrectAnswer: sample_proportion <- total_made / 16
+  AnswerTests: omnitest(correctExpr='sample_proportion <- total_made / 16')
+  Hint: Type total_made / 16 and store it in a variable called sample_proportion.
+
+- Class: cmd_question
+  Output: Type sample_proportion to see your sample proportion of shots made. 
+  CorrectAnswer: sample_proportion
+  AnswerTests: omnitest(correctExpr='sample_proportion')
+  Hint: Type sample_proportion.  
+
+# RBINOM FUNCTION
+- Class: text
+  Output: We are going to do a bit more work with shot simulation shortly, but before we do, I want to teach you a function that will make it just a bit easier to run these simulations. The function is rbinom, and runs simulations from a binomial distribution. The binomial distribution answers questions such as what is the probability of obtaining exactly 7 successes if I take a total of 16 shots with a success rate of 0.6. 
+
+- Class: cmd_question
+  Output: The function rbinom simulates from a binomial distribution. We can run the same simulation by typing, rbinom(1, 16, 0.6). Try it now.
+  CorrectAnswer: rbinom(1, 16, 0.6)
+  AnswerTests: omnitest(correctExpr='rbinom(1, 16, 0.6)')
+  Hint: Type rbinom(1, 16, 0.6).   
+  
+- Class: text
+  Output: Note that the first argument, n, tells us the total number of simulations that we want to run. The second argument, size, gives the total number of baskets we are going to attempt. The final number, prob, tells us the success probability. 
+
+# MOTIVATING CONFIDENCE INTERVALS
+- Class: text
+  Output: Now its time to talk about confidence intervals. We can use simulation to help understand confidence intervals. 
+  
+- Class: text 
+  Output: The nice thing about using simulation as a learning tool is that we know the true population parameters. In the case of the simulation we have been conducting, we are assuming the true population proportion is p = 0.6. 
+  
+- Class: text
+  Output: Knowing the true population parameter is helpful, because when we create a confidence interval, we can determine for any particular simulation whether the confidence interval contains the population parameter.   
+
+# CONFIDENCE INTERVALS WITH THE BINOM LIBRARY  
+- Class: text
+  Output: Lets start by learning how to construct a confidence interval for a binomial proportion. 
+
+- Class: text
+  Output: The package binom can construct confidence intervals for a binomial proportion.
+
+- Class: cmd_question
+  Output: You can install this package by typing install.packages('binom'). Install the package now. 
+  CorrectAnswer: 1
+  AnswerTests: any_of_exprs('1',"install.packages('binom')") 
+
+- Class: cmd_question
+  Output: Now load the functionality from the binom package by typing library(binom). 
+  CorrectAnswer: library(binom)
+  AnswerTests: omnitest(correctExpr="library(binom)")
+
+- Class: cmd_question
+  Output: Imagine that you hit 9 shots out of 16. You can construct binomial confidence intervals on the population proportion by using the binom.confint function. The first argument for this function, x, is the number of successes and second argument, n, is the number of trials. Construct 95 percent confidence intervals on the binomial proportion using only the first two arguments. Do not name the arguments. 
+  CorrectAnswer: binom.confint(9, 16)
+  AnswerTests: omnitest(correctExpr="binom.confint(9, 16)")
+
+- Class: text
+  Output: Take a look at the output that you just produced. In this output, confidence intervals are shown for 11 different methods. Lets note three of the methods which are mentioned by your book. The so-called exact method of Clopper and Pearson (1934) is titled 'exact'. The standard Wald method is titled 'asymptotic', and the modified Wald method is titled 'agresti-coull'.
+
+- Class: text
+  Output: The result of running binom.confint() is a data.frame. You can access columns of the data.frame using the $. For instance, binom.confint(9, 16)$upper would return the upper end of the 95 percent confidence intervals from all 11 methods. 
+  
+- Class: cmd_question
+  Output: Now lets extract only the agresti-coull type confidence interval. This is the type of confidence interval that your book appears to recommend. You can extract it by including methods = "agresti-coull" as the third argument of your function call.   
+  CorrectAnswer: binom.confint(9, 16, method = "agresti-coull")
+  AnswerTests: omnitest(correctExpr="binom.confint(9, 16, method = 'agresti-coull')") 
+
+- Class: text
+  Output: Look at the 95 percent modified Wald confidence intervals that you just constructed. Do the confidence intervals contain the true population parameter of 0.6?
+  
+- Class: text
+  Output: Now, lets see whether 95 percent 'agresti-coull' confidence intervals really provide 95 percent confidence for a population proportion if the true population proportion is 0.6. To do this we are going to repeatedly run a binomial simulation, compute confidence intervals on the proportion and look at what proportion of our confidence intervals contain the true population parameter.  
+
+- Class: cmd_question
+  Output: We can simulate our 16 shot experiment a large number of times by increasing the number of simulations in the expression rbinom(1, 16, 0.6). Try changing the number of simulations to be 100 instead of 1. Store the result in a variable named hits_out_of_16.
+  CorrectAnswer: hits_out_of_16 <- rbinom(100, 16, 0.6)
+  AnswerTests: omnitest(correctExpr='hits_out_of_16 <- rbinom(100, 16, 0.6)')
+  Hint: Change the first argument in rbinom from 1 to 100. 
+      
+- Class: cmd_question
+  Output: Type hits_out_of_16 to see your total shots out of 16 for each of 100 blocks of 16 shot attempts. 
+  CorrectAnswer: hits_out_of_16
+  AnswerTests: omnitest(correctExpr='hits_out_of_16')
+  Hint: Type hits_out_of_16.    
+
+- Class: text
+  Output: The output above shows the number of hits out of 16 for each of 100 different simulations.
+  
+- Class: cmd_question
+  Output: To convert this to proportions, just divide by 16. Try this and store the result in a variable called sample_proportions. 
+  CorrectAnswer: sample_proportions <- hits_out_of_16 / 16
+  AnswerTests: omnitest(correctExpr='sample_proportions <- hits_out_of_16 / 16')
+  Hint: Try dividing hits_out_of_16 by 16. 
+  
+- Class: cmd_question
+  Output: Type sample_proportions to see your proportion of hits for each of the 100 simulations. 
+  CorrectAnswer: sample_proportions
+  AnswerTests: omnitest(correctExpr='sample_proportions')
+
+
+- Class: cmd_question
+  Output: Now try using the hist function to construct a histogram of all the sample proportions in the variable sample_proportions.
+  CorrectAnswer: hist(sample_proportions)
+  AnswerTests: omnitest(correctExpr='hist(sample_proportions)')
+  Hint: Use the hist function on the variable sample_proportions.
+
+- Class: text
+  Output: What you've just approximately constructed is a sampling distribution, more specifically, the sampling distribution of the sample proportion. Now, you'd need to take a lot more simulations to make a reasonable approximation for this distribution, but we won't do that here. 
+
+- Class: cmd_question
+  Output: Now we are going to put confidence intervals on each of the binomial proportions. Luckily, binom.confint will also take a vector of successes as an argument. Go ahead and try calling this function with hits_out_of_16 as your vector of successes. Use 16 as the number of trials. Note that you can just pass 16 in as the second argument and it will recycle this number for all 100 simulations. Also make sure to again use the agresti-coull method. Store the result in a variable called confints. 
+  CorrectAnswer: confints <- binom.confint(hits_out_of_16, 16, method = "agresti-coull")
+  AnswerTests: omnitest(correctExpr='confints <- binom.confint(hits_out_of_16, 16, method = "agresti-coull")')
+
+- Class: cmd_question
+  Output: Now go ahead and take a look at confints by typing it into the console.
+  CorrectAnswer: confints
+  AnswerTests: omnitest(correctExpr='confints')
+  
+- Class: text
+  Output: confints is a data.frame containing information for each simulation about the number of successes, total number of trials, estimated proportion and 95 percent confidence intervals on the proportion.
+
+- Class: cmd_question
+  Output: Lets create a plot of all these confidence intervals to see which ones overlap the true population proportion of 0.6. In order to do this, we first need to install the plotting package ggplot2. Type install.packages('ggplot2'). If you know you already have this installed then just type 1 instead.
+  CorrectAnswer: 1
+  AnswerTests: any_of_exprs('1', 'install.packages("ggplot2")') 
+
+- Class: cmd_question
+  Output: Now load the ggplot2 library with the library function. Do not use quotations around the library name. 
+  CorrectAnswer: library(ggplot2)
+  AnswerTests: omnitest('library(ggplot2)')  
+
+- Class: cmd_question
+  Output: We can now construct a plot of the estimated proportions and and confidence intervals using the following command - plt <- qplot(x = 1:100, y = mean, ymin = lower, ymax = upper, data = confints, geom = c("point","errorbar"), ylab = "Proportion"). Type this now.
+  CorrectAnswer: plt <- qplot(x = 1:100, y = mean, ymin = lower, ymax = upper, data = confints, geom = c("point","errorbar"), ylab = "Proportion")
+  AnswerTests: omnitest('plt <- qplot(x = 1:100, y = mean, ymin = lower, ymax = upper, data = confints, geom = c("point","errorbar"), ylab = "Proportion")')
+  
+- Class: cmd_question
+  Output: The plot is now stored in the plt variable. You can view it by typing plt. Do this now.
+  CorrectAnswer: plt
+  AnswerTests: any_of_exprs('plt')
+  
+- Class: cmd_question
+  Output: Now lets go ahead and add a horizontal line for the true population proportion. You can do this by typing plt + geom_hline(yintercept = 0.6). Try it now.
+  CorrectAnswer: plt + geom_hline(yintercept = 0.6)
+  AnswerTests: any_of_exprs('plt + geom_hline(yintercept = 0.6)')  
+  
+- Class: cmd_question
+  Output: How many of your confidence intervals did not contain the true proportion 0.6?  
+  AnswerTests: omnitest(correctVal = sum(confints$lower > 0.6 | confints$upper < 0.6))
+  
+- Class: text
+  Output: It is easily possible that more than 5 of your intervals may not have contained the true proportion. Note, however, that if we were to increase the simulations to 10000 or larger, we would expect that nearly 95 percent of the intervals should contain the true mean. 
+  
+- Class: text
+  Output: What is meant by 95 percent confidence is that given model assumptions (which are met with this simulation), we expect that over the long run, 95 percent of the constructed confidence intervals will contain the true population parameter. 
+ 
+  
+    
