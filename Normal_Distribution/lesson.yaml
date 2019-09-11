@@ -1,0 +1,190 @@
+- Class: meta
+  Course: Stat511
+  Lesson: Normal Distribution
+  Author: your name goes here
+  Type: Standard
+  Organization: your organization's name goes here
+  Version: 2.4.4
+
+
+# SIMULATION FROM A NORMAL DISTRIBUTION
+- Class: text
+  Output: In this lesson, we will go through the basics of the normal distribution and how to produce confidence intervals for the population mean.
+
+- Class: text 
+  Output: Recall the body temperature data from your book chapter 12. Lets imagine that we conduct an experiment where we sample 100 animals from a large population and measure the body temperature of each animal. Lets assume that the body temperatures of the animals are normally distributed. We can anticipate the results we might get by conducting a simulation. 
+
+- Class: cmd_question 
+  Output: You can simulate from a normal distribution using the rnorm function. The important arguments for this function are n, mean and sd. n indicates the number of samples you want to take, mean indicates the mean of the normal distribution and sd indicates the standard deviation. Lets assume that body temperatures are normally distributed with mean 36.82 (degrees C) and standard deviation 0.41 degrees C. Try taking a sample of 100 body temperatures now. Make sure to provide argument labels for the 2nd (mean) and 3rd (sd) arguments, but not the first one (n). Store the result in a variable called bodytemp1.
+  CorrectAnswer: bodytemp1 <- rnorm(100, mean = 36.82, sd = 0.41)
+  AnswerTests: omnitest(correctExpr='bodytemp1 <- rnorm(100, mean = 36.82, sd = 0.41)')
+  
+- Class: cmd_question 
+  Output: Take a look at bodytemp1.
+  CorrectAnswer: bodytemp1
+  AnswerTests: omnitest(correctExpr='bodytemp1')  
+
+# CREATE HISTOGRAM FROM NORMAL SIMULATION
+- Class: cmd_question 
+  Output: Recall that you can create a histogram of the data using the hist function. Create a histogram of bodytemp1 now.
+  CorrectAnswer: hist(bodytemp1)
+  AnswerTests: omnitest(correctExpr='hist(bodytemp1)')  
+
+# COMPUTE SAMPLE MEAN FOR A SINGLE SAMPLE
+- Class: cmd_question 
+  Output: We can compute the sample mean of the body temperatures by using the function mean. Try taking the mean of bodytemp1 and store it in the variable mean1.
+  CorrectAnswer: mean1 <- mean(bodytemp1)
+  AnswerTests: omnitest(correctExpr='mean1 <- mean(bodytemp1)')  
+  
+- Class: cmd_question 
+  Output: Take a look at mean1.
+  CorrectAnswer: mean1
+  AnswerTests: omnitest(correctExpr='mean1')
+
+# COMPUTE SAMPLE STANDARD DEVIATION FOR SINGLE SAMPLE  
+- Class: cmd_question 
+  Output: We can compute the sample standard deviation of body temperatures by using the function sd. Try taking the sd of bodytemp1 and store it in the variable sd1.
+  CorrectAnswer: sd1 <- sd(bodytemp1)
+  AnswerTests: omnitest(correctExpr='sd1 <- sd(bodytemp1)')  
+  
+- Class: cmd_question 
+  Output: Take a look at sd1.
+  CorrectAnswer: sd1
+  AnswerTests: omnitest(correctExpr='sd1')  
+
+# USE REPLICATE TO TAKE MANY SAMPLE MEANS
+- Class: cmd_question 
+  Output: So far we have taken only a single sample. In order to understand the range of results that we might obtain, it can be worthwhile to take more than one sample. We can do this using the replicate function. To run 10000 replications of our sampling, the replicate function can be used as follows - replicate(10000, expression), where experession is an expression that you want to repeatedly evaluate. In this case we want to repeatedly run rnorm(100, mean = 36.82, sd = 0.41). Try doing this and store the result in a variable called samples. 
+  CorrectAnswer: samples <- replicate(10000, rnorm(100, mean = 36.82, sd = 0.41))
+  AnswerTests: omnitest(correctExpr='samples <- replicate(10000, rnorm(100, mean = 36.82, sd = 0.41))')  
+
+- Class: cmd_question 
+  Output: Note that you have just created a matrix with normal random values. To look at the first 2 rows and first 2 columns, type samples[1:2, 1:2]. Try this now.
+  CorrectAnswer: samples[1:2, 1:2]
+  AnswerTests: omnitest(correctExpr='samples[1:2, 1:2]')
+  
+- Class: cmd_question 
+  Output: To determine the dimensions of your matrix (i.e., how many rows/columns) you can type dim(samples). Try this now. 
+  CorrectAnswer: dim(samples)
+  AnswerTests: omnitest(correctExpr='dim(samples)')  
+ 
+- Class: text 
+  Output: Notice that your matrix of samples has a total of 100 rows (each row representing one individual), and 10000 columns (each column representing a new sample.
+
+# COMPUTE SAMPLE MEANS USING THE APPLY FUNCTION
+- Class: text 
+  Output: It may be of interest to compute the sample mean for each of our samples to get a sense of the variability. We can do this by applying a function to each column. The function apply can help us with this. The apply function literally applies a function to each row or column of a matrix, depending on which one you specify. The first argument to this function is the matrix (we will use samples), the second argument is the MARGIN (we will pass in the value 2 to let R know that we want to apply the function to the columns), and finally, the third argument is the function which we want evaluated on each column (we will use mean). 
+
+- Class: cmd_question 
+  Output: Try using the apply function to take the sample mean of each column in the matrix samples. Store the result in a variable called sample_means. Note, do not include the name of any of the arguments.
+  CorrectAnswer: sample_means <- apply(samples, 2, mean)
+  AnswerTests: omnitest(correctExpr='sample_means <- apply(samples, 2, mean)')  
+
+# CONSTRUCT A HISTOGRAM OF THE SAMPLE MEANS 
+- Class: cmd_question 
+  Output: Now go ahead and create a histogram of the sample means stored in sample_means.
+  CorrectAnswer: hist(sample_means)
+  AnswerTests: omnitest(correctExpr='hist(sample_means)')
+
+- Class: text 
+  Output: You have just (roughly) constructed the sampling distribution of the sample mean. Click back and forth on your plots to compare the population distribution (e.g., the first histogram that we created) to the sampling distribution of the sample mean.
+
+- Class: text 
+  Output: You may notice a couple of things. First, the sampling distribution (of the sample mean) is narrower than the population distribution of body temperature. Second, the sampling distribution (of the sample mean) should seem roughly normal. 
+  
+- Class: text 
+  Output: It turns out that the sampling distribution of the sample mean is actually normal. A nice property of normal random variables is that when you add (or average) normal random variable together, the resulting variable is also normal. We can prove that the sampling distribution of the sample mean of a normal random variable is precisely normal (though we won't do this here). 
+
+# STANDARD ERROR IN THE MEAN
+- Class: text 
+  Output: Now that we have simulated many possible sample means, lets consider how much variability is due to random sampling. Typically, we will only have a single sample from which to estimate this. 
+
+ 
+- Class: cmd_question 
+  Output: Recall from class that you can make this estimate by taking the standard deviation of the sample and then dividing by the square root of n. Recall that in this case, you have already computed the standard deviation of your single sample and stored it in sd1 and your sample size is 100. Compute the standard error in the mean now and store it in a variable called sem1. Use sqrt(100) rather than 10.
+  CorrectAnswer: sem1 <- sd1/sqrt(100)
+  AnswerTests: omnitest(correctExpr='sem1 <- sd1/sqrt(100)')
+  Hint: Try storing sd1/sqrt(100) in the variable sem1.
+
+- Class: cmd_question 
+  Output: Take a look at sem1.
+  CorrectAnswer: sem1
+  AnswerTests: omnitest(correctExpr='sem1')  
+
+- Class: cmd_question 
+  Output: The standard error in the mean is an estimate of the standard deviation of the sampling distribution (the distribution that you now have plotted). We can determine the actual standard deviation of the sampling distribution by taking the true standard deviation of 0.41 and dividing by the square root of 100. Do this now. 
+  CorrectAnswer: 0.41 / sqrt(100)
+  AnswerTests: omnitest(correctVal=0.41 / sqrt(100))
+
+# ESTIMATE SAMPLE SD FOR ALL SAMPLES
+- Class: text
+  Output: We are about to prepare for constructing confidence intervals. One key assumption of confidence intervals is that for every sample mean we compute, the standardized value of the difference between the sample mean and the true mean follows a standard normal distribution. 
+
+- Class: text
+  Output: Lets first roughly check that this is the case by standardizing, and constructing a histogram of the standardized differences. To standardize, we are going to need to divide the difference between the sample mean and the true population mean by the standard error in the mean. 
+
+- Class: cmd_question
+  Output: Recall that to compute the sample means, we used the expression apply(samples, 2, mean). We can compute the sample standard deviation for each of the samples by again using the apply function and passing sd for the third argument instead of mean. This will result in computing the standard deviation for each of the samples instead of the mean. Store the result in a variable called sample_sds. 
+  CorrectAnswer: sample_sds <- apply(samples, 2, sd)
+  AnswerTests: omnitest(correctExpr='sample_sds <- apply(samples, 2, sd)')
+
+- Class: cmd_question 
+  Output: Now, we can compute the standard error in the mean for each sample by dividing by the square root of 100 (do this instead of just dividing by 10 to correctly match the expression). Store the result in sample_sems.
+  CorrectAnswer: sample_sems <- sample_sds / sqrt(100)
+  AnswerTests: omnitest(correctExpr='sample_sems <- sample_sds / sqrt(100)')  
+
+# CHECK THAT THE STANDARDIZED Z VALUES FOLLOW A STANDARD NORMAL
+- Class: text 
+  Output: Now lets standardize the sample_means and check that they appear (at least roughly) to follow a standard normal distribution. 
+  
+- Class: cmd_question 
+  Output: To standardize the values, we need to take our sample_means, subtract the true mean of 36.82, and then divide by sample_sems. Make sure to use parenthesis around the difference. Store the result in a variable called z. 
+  CorrectAnswer: z <- (sample_means - 36.82) / sample_sems
+  AnswerTests: omnitest(correctExpr='z <- (sample_means - 36.82) / sample_sems')  
+  
+- Class: cmd_question 
+  Output: Now lets check to see whether these standardized values follow a standard normal. Create a histogram of z using the hist function.
+  CorrectAnswer: hist(z)
+  AnswerTests: omnitest(correctExpr='hist(z)')
+
+- Class: text 
+  Output: Look at the histogram. Does the distribution appear standard normal? Does it appear that about 2/3 of the observations are within [-1, 1]? Note that this distribution is only normal because the size of our sample is far greater than 30.
+
+# CONFIDENCE INTERVALS FOR STANDARD NORMAL
+- Class: text 
+  Output: We have almost gotten to the point of constructing confidence intervals on the population mean for the single sample that we had. 
+  
+- Class: text
+  Output: As the size of our sample is far greater than 30, we can use confidence intervals that are based on assuming that the standardized sample means follow a standard normal distribution. 
+
+- Class: text 
+  Output: The normal based 95 percent confidence intervals are computed as - sample_mean +- z* * SEM (first * is to denote z*, second * is for multiplication), where z* represents the 97.5th percentile from a standard normal distribution. The inclusion of the SEM and the sample_mean in computing these confidence intervals is essentially the reverse transform from what we did to standardize. 
+  
+- Class: cmd_question
+  Output: To compute these confidence intervals, lets first obtain the 97.5th percentile from a standard normal. You can do this by running, qnorm(0.975). Try running this now.
+  CorrectAnswer: qnorm(0.975)
+  AnswerTests: omnitest(correctExpr='qnorm(0.975)')  
+  
+- Class: cmd_question 
+  Output: Now determine the lower end of the confidence intervals on the mean from your initial sample by computing, sample_mean - z* * SEM. Note that mean1 contains the sample mean, z* is qnorm(0.975) and SEM is contained in sem1. 
+  CorrectAnswer: mean1 - qnorm(0.975) * sem1
+  AnswerTests: omnitest(correctVal = mean1 - qnorm(0.975) * sem1)  
+
+- Class: cmd_question 
+  Output: Go ahead and try computing the upper end of the confidence interval now.
+  CorrectAnswer: mean1 + qnorm(0.975) * sem1
+  AnswerTests: omnitest(correctVal=mean1 + qnorm(0.975) * sem1) 
+  
+- Class: text
+  Output: Just as a reminder, it only makes sense to compute confidence intervals using qnorm for sample sizes above 30!
+
+  
+  
+  
+  
+  
+  
+  
+ 
+
+
