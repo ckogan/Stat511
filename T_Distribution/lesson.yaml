@@ -1,0 +1,145 @@
+- Class: meta
+  Course: Stat511
+  Lesson: T_Distribution
+  Author: your name goes here
+  Type: Standard
+  Organization: your organization's name goes here
+  Version: 2.4.4
+
+
+- Class: text 
+  Output: So far, we've looked at creating confidence intervals when the sample size is above 30. 
+
+- Class: text 
+  Output: Now we're going to try the same thing, but for sample sizes that are less than 30.
+
+- Class: text 
+  Output: Let's start by looking at the sampling distribution for the sample mean of a normally distributed variable when the sample size is less than 30. 
+
+- Class: cmd_question 
+  Output: Recall that we previously plotted the sampling distribution for the sample mean of a hundred normal random variables. We did this in two steps. The first step was to simulate many samples using the code ~ samples <- replicate(10000, rnorm(100, mean = 36.82, sd = 0.41)). Rerun this command, but this time draw only 5 samples per simulation.
+  CorrectAnswer: samples <- replicate(10000, rnorm(5, mean = 36.82, sd = 0.41))
+  AnswerTests: omnitest(correctExpr='samples <- replicate(10000, rnorm(5, mean = 36.82, sd = 0.41))')
+  
+- Class: cmd_question 
+  Output: The second step was to compute the sample mean for each of the 10000 samples. We used the code ~ sample_means <- apply(samples, 2, mean). Go ahead and rerun this code to compute the sample means.
+  CorrectAnswer: sample_means <- apply(samples, 2, mean)
+  AnswerTests: omnitest(correctExpr='sample_means <- apply(samples, 2, mean)')
+  
+- Class: cmd_question
+  Output: Now look at the distribution of the sample means by plotting a histogram.
+  CorrectAnswer: hist(sample_means)
+  AnswerTests: omnitest(correctExpr='hist(sample_means)')  
+
+- Class: text 
+  Output: Notice that the sampling distribution still appears normal. 
+
+- Class: text 
+  Output: Unfortunately, however in most real world cases we don't know the form of the sampling distribution of the sample mean because the true standard deviation of the sampling distribution is unknown. Previously we computed the distribution of the the standardized sample means and verified (roughly) that it followed a standard normal. 
+
+- Class: cmd_question 
+  Output: So let's take a look at the distribution of the standardized sample mean as before by subtracting the true mean and dividing by the sample standard deviation. Previously, we did this by first computing the sample standard deviation for each sample ~ sample_sds <- apply(samples, 2, sd). Try running the code again to compute these sds for our new simulation. 
+  CorrectAnswer: sample_sds <- apply(samples, 2, sd)
+  AnswerTests: omnitest(correctExpr='sample_sds <- apply(samples, 2, sd)') 
+
+- Class: cmd_question 
+  Output: Our next step was to compute the standard error in the mean for each sample using the code ~ sample_sems <- sample_sds / sqrt(100). Try this again, but this time using the new sample size. 
+  CorrectAnswer: sample_sems <- sample_sds / sqrt(5)
+  AnswerTests: omnitest(correctExpr='sample_sems <- sample_sds / sqrt(5)')
+
+- Class: cmd_question 
+  Output: Finally, we computed standardized sample means using the code ~ z <- (sample_means - 36.82) / sample_sems. Run this code again, but this time store the result in a variable called tvals instead of a variable called z.
+  CorrectAnswer: tvals <- (sample_means - 36.82) / sample_sems
+  AnswerTests: omnitest(correctExpr='tvals <- (sample_means - 36.82) / sample_sems')
+
+- Class: cmd_question 
+  Output: Now produce a histogram of standardized sample means by using the hist function. 
+  CorrectAnswer: hist(tvals)
+  AnswerTests: omnitest(correctExpr='hist(tvals)')  
+
+
+- Class: cmd_question 
+  Output: The histogram that you've produced puts the data into a small number of bins and it is somewhat hard to tell whether the distribution is normal. Lets try increasing the number of bins to 30 by running hist(tvals, 30). Run this now.  
+  CorrectAnswer: hist(tvals, 30)
+  AnswerTests: omnitest(correctExpr='hist(tvals, 30)')  
+
+- Class: text 
+  Output: Notice that compared to the distribution when we took a sample of 100 normal values, something has changed drastically in the histogram. The tails of the distribution are now really long. This phenomena occurs because of the uncertainty in our estimate of the population standard deviation. The distribution of the standardized sample means is not normal. Instead it follows a t-distribution? 
+
+- Class: exact_question
+  Output: The degrees of freedom for a t-distribution is computed as the total sample size used in the computation of the standard deviation minus the the number of intermediate parameters that need to be computed. In the case of computing the sample standard deviation for a sample, the only parameter required is the sample mean. How many degrees of freedom does the t-distribution that you just plotted have?
+  CorrectAnswer: 4
+  AnswerTests: omnitest(correctVal=4)
+
+- Class: text 
+  Output: Properties of a t distribution can be determined from functions in R.
+  
+- Class: text 
+  Output: Quantiles of a t distribution can be extracted using the function qt. 
+  
+- Class: mult_question
+  Output: What is the 50th percentile of a t-distribution with 4 degrees of freedom? 
+  AnswerChoices: zero; one; two;
+  CorrectAnswer: zero
+  AnswerTests: omnitest(correctVal='zero')
+
+- Class: cmd_question
+  Output: We can verify this by using the qt function. Try typing qt(0.5, 4).
+  CorrectAnswer: qt(0.5, 4)
+  AnswerTests: omnitest(correctExpr='qt(0.5, 4)')
+
+- Class: text
+  Output: Like the normal distribution, we can also compute probabilities from the t-distribution.
+
+- Class: mult_question
+  Output: What is the probability that a random value from a t-distribution with 4 degrees of freedom is less than 0?
+  AnswerChoices: 0.10; 0.50; 0.95
+  CorrectAnswer: 0.50
+  AnswerTests: omnitest(correctVal='0.50')
+
+- Class: cmd_question
+  Output: We can verify this using the pt function which obtains probabilities from the t-distribution. The first argument of pt is the value of the t-statistic, and the second is the degrees of freedom. Try typing pt(0, 4).
+  CorrectAnswer: pt(0, 4)
+  AnswerTests: omnitest(correctExpr='pt(0, 4)')  
+
+- Class: cmd_question
+  Output: Go ahead and determine the probability that a t statistic will be less than 1.96 with 4 degrees of freedom. 
+  CorrectAnswer: pt(1.96, 4)
+  AnswerTests: omnitest(correctExpr='pt(1.96, 4)') 
+
+- Class: text
+  Output: When we want to produce confidence intervals on the sample mean of normally distributed data with unknown standard deviation, we will use a t-distribution. 
+
+- Class: text
+  Output: Let's go through this full process of constructing confidence intervals on the mean of a normal population when we've taken a small sample (e.g., < 30). Note that you may as well also just use this procedure for large samples.
+
+- Class: cmd_question
+  Output: First take a random sample of 5 from a normal population with mean 36.82 and standard deviation 0.41. Store it in the variable sample1.
+  CorrectAnswer: sample1 <- rnorm(5, mean = 36.82, sd = 0.41)
+  AnswerTests: omnitest(correctExpr='sample1 <- rnorm(5, mean = 36.82, sd = 0.41)')
+
+- Class: cmd_question
+  Output: Now compute the mean of this sample store it in the variable mean1. 
+  CorrectAnswer: mean1 <- mean(sample1)
+  AnswerTests: omnitest(correctExpr='mean1 <- mean(sample1)')  
+
+- Class: cmd_question
+  Output: Now compute the standard deviation store it in the variable sd1.
+  CorrectAnswer: sd1 <- sd(sample1)
+  AnswerTests: omnitest(correctExpr='sd1 <- sd(sample1)')
+
+- Class: cmd_question
+  Output: Now compute the 97.5 percentile of a t-distribution with the appropriate degrees of freedom and store it in the variable q975. 
+  CorrectAnswer: q975 <- qt(0.975, 4)
+  AnswerTests: omnitest(correctExpr='q975 <- qt(0.975, 4)')
+
+
+- Class: exact_question
+  Output: The lower end of 95% confidence intervals on the population mean can be obtained by taking the sample mean (mean1) and subtracting the t-distribution percentile (q975) times the standard deviation (sd1) divided by the sqrt of the sample size. Try computing the lower end of the confidence interval on the population mean for this sample.
+  CorrectAnswer: mean1 - q975 * sd1 / sqrt(5)
+  AnswerTests: omnitest(correctVal= mean1 - q975 * sd1 / sqrt(5)) 
+
+- Class: exact_question
+  Output: Now try computing the upper end of the interval by using addition instead of subtraction.
+  CorrectAnswer: mean1 + q975 * sd1 / sqrt(5)
+  AnswerTests: omnitest(correctVal=mean1 + q975 * sd1 / sqrt(5))
