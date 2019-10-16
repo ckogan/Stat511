@@ -1,0 +1,219 @@
+- Class: meta
+  Course: Stat511
+  Lesson: Simple_Linear_Regression
+  Author: your name goes here
+  Type: Standard
+  Organization: your organization's name goes here
+  Version: 2.4.4
+  
+- Class: text
+  Output: In this lab, we're going to learn about linear regression using the mpg data. 
+
+- Class: text
+  Output: Recall the data.frame mpg that was used in the swirl course on ggplot2. This dataset contains a subset of the fuel economy data that the EPA makes available on http://fueleconomy.gov. It contains only models which had a new release every year between 1999 and 2008 - this was used as a proxy for the popularity of the car.
+
+- Class: cmd_question
+  Output: In the ggplot2 lecture, we looked at the relationship between  highway mpg and cylinder displacement from the mpg data.frame. Lets remember what this relationship looks like by first constructing a graphical object and mapping the displacement (displ) to the x-axis and the highway mpg (hwy) to the y-axis. Put the resulting object in the variable g. It will look something like g <- ggplot(mydata, aes(x=myx, y=myy)).
+  CorrectAnswer: g <- ggplot(mpg, aes(x=displ, y=hwy))
+  AnswerTests: omnitest(correctExpr='g <- ggplot(mpg, aes(x=displ, y=hwy))')
+
+- Class: cmd_question
+  Output: Now add points to g, using the geom_point function. Store the result in g2. 
+  CorrectAnswer: g2 <- g + geom_point()
+  AnswerTests: omnitest(correctExpr='g2 <- g + geom_point()')
+
+- Class: cmd_question
+  Output: Take a look at g2.
+  CorrectAnswer:
+  AnswerTests: omnitest(correctExpr='g2')  
+  
+- Class: text
+  Output: Imagine that you were asked the following question; Characterize how well the linear association between highway mpg and cylinder displacement explains highway mpg. Make speculative inference on all car models between 1999 and 2008. Report your results in a single sentence making sure to characterize the error due to random sampling. 
+
+- Class: text
+  Output: We have discussed both linear regression and correlation in class as tools for understanding linear association. I typically think of them as follows. Linear regression is a model, and the pearson correlation is a statistic. The pearson correlation can be computed as a bi-product of the linear regression model or as a stand-alone statistic. The pearson correlation is not the only statistic that can be computed directly from a linear regression analysis; other statistics include model coefficients and R-squared. 
+  
+- Class: text
+  Output: Confidence intervals for correlation typically assume random X's and Y's. If you want confidence intervals on the correlation, but have experimentally fixed X's, you'd need to look elsewhere, and this is beyond the scope of this course. For inference on the beta coefficients, it doesn't matter whether your X values are fixed or random, standard linear regression estimates and confidence intervals work fine for both. 
+
+- Class: text
+  Output: As such lets continue as follows. Lets first fit a linear regression model. We will continue by deciding on the appropriate model statistics that are needed to answer the question. Finally, if we choose correlation as the appropriate statistic, we will compute the appropriate confidence intervals.
+  
+- Class: text
+  Output: The lm function in R can be used for linear regression. 
+
+- Class: text
+  Output: The lm function takes two primary arguments. The first argument is the model formula describing what relationship we are interested in estimating. The second argument is the data.
+
+- Class: text
+  Output: Lets talk about model formula first. Model formula are used to define models. Models have both inputs and outputs. The inputs to a statistical model are sometimes called explanatory variables. The output (often just a single variable) is sometimes called the response variable. 
+
+- Class: text
+  Output: When constructing model formula, the response variable goes on the left hand side and the explanatory variables go on the right hand side; response ~ explainatory 
+
+- Class: text
+  Output: The tilde (~) is used to separate the response and explanatory variables. 
+
+- Class: cmd_question
+  Output: Try constructing a model formula with highway mpg (hwy) as the response variable and displacement (displ) as the explanatory variable. 
+  CorrectAnswer: hwy ~ displ
+  AnswerTests: omnitest(correctExpr='hwy ~ displ')  
+
+- Class: text
+  Output: The second argument for the lm is the data. Typically, you will have all the variables that are found in the model formula stored as columns in your data.frame. 
+
+- Class: cmd_question
+  Output: Go ahead now and use the lm function to estimate the least squares line relating highway mpg to displacement. Don't name any of your arguments. Store the result in the variable called mod. 
+  CorrectAnswer: mod <- lm(hwy ~ displ, mpg)
+  AnswerTests: omnitest(correctExpr='mod <- lm(hwy ~ displ, mpg)')
+
+- Class: text
+  Output: Lets think again about what the question was asking. Characterize how well the linear association between highway mpg and cylinder displacement explains highway mpg. It specifically asks how well one variable explains another. Keep this in mind as we explore the various model output. 
+  
+- Class: text
+  Output: The model fitting routine lm returns an object of class lm containing results from the model fitting. These results include parameter estimates, standard errors and residuals.
+
+- Class: cmd_question
+  Output: Take a look at mod.
+  CorrectAnswer:
+  AnswerTests: omnitest(correctExpr='mod')
+
+- Class: text
+  Output: When you print out the fitted model as done above, R will will display the coefficients of the best fit regression line. 
+  
+- Class: exact_question
+  Output: What is the value of the intercept (to 3 decimal digits)?
+  CorrectAnswer: 35.698
+  AnswerTests: omnitest(correctVal='35.698')
+
+- Class: exact_question
+  Output: By how much does the estimate of the average highway mpg decrease for every increase of 2 cu in of displacement? Report the result as a positive number (to 3 decimal digits).
+  CorrectAnswer: 7.062
+  AnswerTests: omnitest(correctVal='7.062')  
+
+- Class: mult_question
+  Output: Does the slope of -3.531 tell us how well the linear association between highway mpg and cylinder displacement explains highway mpg?
+  AnswerChoices: Yes; No
+  CorrectAnswer: No
+  AnswerTests: omnitest(correctVal='No')
+
+
+- Class: text
+  Output: The slope tells us the relationship between the cylinder displacement and the average highway mpg, but it doesn't by itself tell us how close the average is to the actual data (e.g., how well displacement explains highway mpg).
+
+- Class: cmd_question
+  Output: The R-squared value (or coefficient of determination) can be extracted from the model using the summary function. Try typing summary(mod) to see some additional model fit information that includes the R-squared value (labeled Multiple R-squared). 
+  CorrectAnswer: summary(mod)
+  AnswerTests: omnitest(correctExpr='summary(mod)')
+
+
+- Class: exact_question
+  Output: For simple linear regression (1 explanatory variable), the magnitude of the pearson correlation can be computed by taking the square root of the R-squared value. What is the pearson correlation between highway mpg and displacement (rounded to 3 decimal digits)?
+  CorrectAnswer:
+  AnswerTests: omnitest(correctVal='0.766')  
+
+- Class: mult_question
+  Output: The direction of the pearson correlation can be determined by whether the estimate of the displacement effect is positive (then correlation is positive) or negative (then correlation is negative). Is the correlation positive or negative?
+  AnswerChoices: positive; negative
+  CorrectAnswer: negative
+  AnswerTests: omnitest(correctVal='negative')
+  
+- Class: mult_question
+  Output: Does the pearson correlation of -0.766 tell us how well the linear association between highway mpg and cylinder displacement explains highway mpg?
+  AnswerChoices: Yes; No
+  CorrectAnswer: Yes
+  AnswerTests: omnitest(correctVal='Yes') 
+  
+- Class: mult_question
+  Output: Does the R-squared value of 0.587 tell us how well the linear association between highway mpg and cylinder displacement explains highway mpg?
+  AnswerChoices: Yes; No
+  CorrectAnswer: Yes
+  AnswerTests: omnitest(correctVal='Yes') 
+
+- Class: text
+  Output: Both the R-squared statistic and the pearson correlation are giving us similar information when considering the linear relationship between two variables. 
+
+- Class: text
+  Output:  Lets move forward with reporting the correlation coefficient (R-squared would also be acceptable). Now lets consider the second part of the question, report your results in a single sentence making sure to characterize the error due to random sampling.
+  
+- Class: text
+  Output: How do we characterize the error due to random sampling for the pearson correlation coefficient?
+  
+- Class: text
+  Output: Your book talks about correlation only being appropriate under particular assumptions. Here lets clarify that they are talking about the inference only being appropriate under certain assumptions. You can compute a correlation coefficient for any sample that you want. It is how well that correlation coefficient is representative of the correlation for your population of speculation that is debatable. 
+
+- Class: text
+  Output: Here comes the point where we might consider thinking a bit more about our population of speculation. Specifically, are we wanting to speculate about a larger population of cars, and if so, what population. 
+
+- Class: text
+  Output: In all reality, for our purposes, this population of cars may be sufficient. It represents 38 popular car models, and it is anyone's guess whether unpopular car models would display similar characteristics. If we were to decide that characterizing the association in these 38 car models was sufficient, there would be no need to characterize the error due to sampling. We would know exactly how well the linear association of displacement and highway mpg explains highway mpg, and we could just report the exact correlation coefficient. 
+
+- Class: text
+  Output: If I ask a question concerning characterizing the error due to sampling, however, then you should make the assumption that we want to speculate about a much larger population from which we feel the sample is representative (unless otherwise stated).    
+
+- Class: text
+  Output: In order to obtain confidence intervals on the correlation coefficient to quantify the uncertainty due to random sampling, we need to determine what assumptions to use to construct the sampling distribution of the correlation coefficient. 
+
+- Class: text
+  Output: Typically, the assumption of a correlation analysis assumes that both the X and Y values are randomly sampled from the larger population. Confidence intervals on a correlation coefficient are typically obtained making this assumption. 
+
+- Class: text
+  Output: In this case, it makes sense that both the highway mpg and displacement are characteristics of the car, and these cars are being randomly sampled from the population. We want to make inference on a larger population of cars, which will have potentially other mpg and displacement values than we see in our sample. 
+
+- Class: cmd_question
+  Output: The cor.test function in R allows us to put confidence intervals on the pearson correlation when generalizing to a larger population from which both X and Y have been randomly sampled. Pass the displacement and highway mpg as the first and second arguments to the function. Make sure to extract them from the mpg data.frame using mpg$.
+  CorrectAnswer: cor.test(mpg$displ, mpg$hwy)
+  AnswerTests: omnitest(correctExpr='cor.test(mpg$displ, mpg$hwy)')
+  
+- Class: text
+  Output: You can now use these results to construct a sentence answering the question posed. Characterize how well the linear association between highway mpg and cylinder displacement explains highway mpg. Make speculative inference on all car models between 1999 and 2008. Report your results in a single sentence making sure to characterize the error due to random sampling. 
+
+- Class: text
+  Output: Take a minute to write down how you would answer this question before moving on.
+  
+- Class: text
+  Output: One answer might be as follows; We estimate the correlation between highway fuel economy (mpg) and cylinder displacement (cu in) in all car models between 1999 and 2008 to be -0.766 [95 percent CI; -0.814 to -0.707]. (Please excuse the use of the ; here to represent the semicolon and percent to represent the percent sign. Swirl does not allow these characters.
+  
+- Class: text
+  Output: Asking about how well the linear association explains one variable is not the only question that might be asked for linear regression. You might also be asked to describe the relationship between an explanatory variable and the average response. 
+  
+- Class: text
+  Output: For instance, I might ask you to describe the relationship between average highway fuel economy (as the response) and displacement (as the explanatory variable), making speculative inference on all car models between 1999 and 2008. Report your results in one or two sentences, making sure to characterize the error due to random sampling.
+
+- Class: text
+  Output: Reporting pearson correlation will not fully describe the relationship between average highway fuel economy and displacement. Here we want to report details of the best fit linear regression line. 
+
+- Class: text
+  Output: As discussed previously, the coefficients that define the best fit regression line can be printed to the screen by typing mod. 
+  
+- Class: cmd_question
+  Output: Take a look at mod.
+  CorrectAnswer: mod
+  AnswerTests: omnitest(correctExpr='mod')  
+
+- Class: text
+  Output: The error in the coefficients due to random sampling can be extracted using the summary function. 
+
+- Class: cmd_question
+  Output: Take a look at summary(mod).
+  CorrectAnswer: summary(mod)
+  AnswerTests: omnitest(correctExpr='summary(mod)')  
+
+- Class: text
+  Output: Confidence intervals on the coefficient estimates can be obtained in the usual manner by combining the estimate, critical t value, standard error and degrees of freedom. Note that the degrees of freedom are reported in the summary function. In this case we have 232 degrees of freedom in calculating the error standard deviation.
+  
+- Class: exact_question
+  Output: What is the value of the upper end of a 95 percent confidence interval on the intercept, rounded to 1 decimal digit?
+  CorrectAnswer: 37.1
+  AnswerTests: omnitest(correctVal=37.1)
+  
+- Class: cmd_question
+  Output: Confidence intervals for the parameters can also be extracted using the confint function. Try typing confint(mod).
+  CorrectAnswer: confint(mod)
+  AnswerTests: omnitest(correctExpr='confint(mod)')  
+
+- Class: text
+  Output: Take a minute to write down how you would answer this question before moving on.
+  
+- Class: text
+  Output: One answer might be as follows; For car models between 1999 and 2008, the estimated average fuel economy for a car with zero displacement is 35.70 [95 percent CI; 34.28 to 37.12] mpg. Furthermore, every increase of 1 cu in in observed displacement is expected to correspond with an change in the average fuel economy of -3.53 [95 percent CI; -3.91 to -3.14]. 
