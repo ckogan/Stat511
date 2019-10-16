@@ -213,7 +213,7 @@
   AnswerTests: omnitest(correctExpr='confint(mod)')  
 
 - Class: text
-  Output: Take a minute to write down how you would answer this question before moving on.
+  Output: Take a minute to write down how you would answer this question before moving on. As a reminder, the question was; For instance, I might ask you to describe the relationship between average highway fuel economy (as the response) and displacement (as the explanatory variable), making speculative inference on all car models between 1999 and 2008. Report your results in one or two sentences, making sure to characterize the error due to random sampling.
   
 - Class: text
   Output: One answer might be as follows; For car models between 1999 and 2008, the estimated average fuel economy for a car with zero displacement is 35.70 [95 percent CI; 34.28 to 37.12] mpg. Furthermore, every increase of 1 cu in in observed displacement is expected to correspond with an change in the average fuel economy of -3.53 [95 percent CI; -3.91 to -3.14]. 
